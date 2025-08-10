@@ -1,0 +1,31 @@
+[project]
+name = "audio-api"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiofiles>=24.1.0",
+    "anyio>=4.10.0",
+    "httpx>=0.28.1",
+    "librosa>=0.11.0",
+    "loguru>=0.7.3",
+    "pytest>=8.4.1",
+    "pytest-asyncio>=1.1.0",
+    "respx>=0.22.0",
+]
+
+[project.scripts]
+audio-api = "audio_api:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore:PySoundFile failed:UserWarning:",
+    "ignore:librosa.core.audio.__audioread_load:FutureWarning",
+    "ignore::DeprecationWarning:audioread.*"
+]
