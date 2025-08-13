@@ -6,11 +6,12 @@ from audio_api.audio_downloader import download_audio_file
 
 TEST_URL = "https://example.com/test.wav"
 TEST_BYTES = b"RIFF" + b"\x00" * 1024  # fake WAV-like data
+AUDIO_HEADER = {"Content-Type": "audio/wav"}
 
 @respx.mock
 @pytest.mark.asyncio
 async def test_download_success():
-    respx.get(TEST_URL).respond(200, content=TEST_BYTES)
+    respx.get(TEST_URL).respond(200, content=TEST_BYTES, headers=AUDIO_HEADER)
 
     downloaded_path = await download_audio_file(TEST_URL)
 
@@ -51,7 +52,7 @@ async def test_download_handles_redirects():
     redirect_url = "https://example.com/final.wav"
 
     respx.get(TEST_URL).respond(302, headers={"Location": redirect_url})
-    respx.get(redirect_url).respond(200, content=TEST_BYTES)
+    respx.get(redirect_url).respond(200, content=TEST_BYTES, headers=AUDIO_HEADER)
     
 
     downloaded_path = await download_audio_file(TEST_URL)
@@ -61,3 +62,10 @@ async def test_download_handles_redirects():
     assert downloaded_path.name.endswith(".wav") # Suffix comes from the final URL
 
     downloaded_path.unlink()
+
+@respx.mock
+@pytest.mark.asyncio
+async def test_download_fails_on_wrong_content_type():
+    respx.get(TEST_URL).respond(200, content="<html/>", headers={"Content-Type": "text/html"})
+    with pytest.raises(ValueError, match="URL does not point to an audio file"):
+        await download_audio_file(TEST_URL)

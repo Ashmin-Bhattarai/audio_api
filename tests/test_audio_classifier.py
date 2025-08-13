@@ -1,16 +1,11 @@
-# tests/test_audio_classifier.py
-
 import pytest
 import numpy as np
 
-# Import the async function we want to test
 from audio_api.audio_classifier import classify_audio
 
-# A standard sample rate for all our synthetic test signals
 SAMPLE_RATE = 22050
-DURATION_S = 1  # 1 second of audio for each test
+DURATION_S = 1
 
-# Mark all tests in this file as asyncio tests
 pytestmark = pytest.mark.asyncio
 
 
@@ -18,13 +13,10 @@ async def test_classify_silence():
     """
     Tests that an array of zeros is correctly classified as 'silence'.
     """
-    # Arrange: Create a silent audio signal (all zeros)
     y_silence = np.zeros(SAMPLE_RATE * DURATION_S)
 
-    # Act
     classification = await classify_audio(y_silence, SAMPLE_RATE)
 
-    # Assert
     assert classification == "silence"
 
 

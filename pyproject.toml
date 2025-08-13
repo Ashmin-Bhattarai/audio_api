@@ -1,6 +1,6 @@
 [project]
 name = "audio-api"
-version = "0.1.0"
+version = "1.0.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -13,6 +13,7 @@ dependencies = [
     "loguru>=0.7.3",
     "pytest>=8.4.1",
     "pytest-asyncio>=1.1.0",
+    "redis>=6.4.0",
     "respx>=0.22.0",
 ]
 

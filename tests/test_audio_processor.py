@@ -73,8 +73,7 @@ async def test_extract_features_sucess(tmp_path: Path):
 @pytest.mark.asyncio
 async def test_extract_features_invalid_file(tmp_path: Path):
     """
-    Tests that the function raises a ValueError for a non-audio file
-    and cleans up the invalid file.
+    Tests that the function raises a ValueError for a non-audio file.
     """
     
     invalid_file = tmp_path / "not_audio.txt"
