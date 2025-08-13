@@ -1,16 +1,23 @@
 services:
-  # api:
-  #   build: .
-  #   container_name: audio-api-app
-  #   ports:
-  #     - "8000:8000"
-  #   environment:
-  #     - REDIS_URL=redis://redis:6379
-  #   depends_on:
-  #     - redis
+  api:
+    build:
+      context: .
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+    depends_on:
+      - redis
+    volumes:
+      - ./logs:/app/logs
 
   redis:
-    image: "redis:alpine"
+    image: "redis:7-alpine"
     container_name: audio-api-redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data_volume:/data
+
+volumes:
+  redis_data_volume:

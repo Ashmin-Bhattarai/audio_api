@@ -14,11 +14,13 @@ from audio_api.models import (
     AudioFeaturesResponse,
     SuccessResponse,
 )
+from audio_api.ml_classifier import classify_audio_with_model
 from audio_api import config
-
+from audio_api.log_config import setup_logging
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    setup_logging()
     app.state.redis = redis.from_url(config.REDIS_URL, decode_responses=True)
     logger.info("Successfully connected to Redis.")
     yield
@@ -72,7 +74,7 @@ async def analyze_audio_endpoint(
 
         features, y_mono, sr = await extract_audio_features(temp_file_path)
 
-        classification = await classify_audio(y_mono, sr)
+        classification = await classify_audio_with_model(y_mono, sr)
 
         response_data = AudioFeaturesResponse(
             duration=features["duration"],
@@ -111,6 +113,10 @@ def read_root():
     }
 
 
-if __name__ == "__main__":
+def main():
     import uvicorn
     uvicorn.run(app, host=config.API_HOST, port=config.API_PORT)
+
+
+if __name__ == "__main__":
+    main()

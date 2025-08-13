@@ -1,2 +1,3 @@
-def main() -> None:
-    print("Hello from audio-api!")
+from audio_api.main import main
+
+__all__ = ['main']
